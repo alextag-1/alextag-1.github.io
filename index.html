@@ -2,34 +2,65 @@
 <html>
 <head>
   <title>Your Brand</title>
+
   <style>
     body {
       background: white;
       color: black;
       font-family: Helvetica, Arial, sans-serif;
-      text-align: center;
-      margin-top: 40vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
       letter-spacing: 2px;
     }
 
-    a {
-      display: block;
-      margin: 10px;
-      text-decoration: none;
-      color: black;
-      transition: 0.3s;
+    .container {
+      text-align: center;
     }
 
-    a:hover {
-      opacity: 0.5;
+    h1 {
+      margin-bottom: 40px;
+    }
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .links a {
+      text-decoration: none;
+      color: black;
+      border: 1px solid black;
+      padding: 10px 20px;
+      transition: 0.3s;
+      width: 200px;
+      margin: auto;
+    }
+
+    .links a:hover {
+      background: black;
+      color: white;
     }
   </style>
 </head>
 
 <body>
-  <h1>YOUR BRAND</h1>
-  <a href="#">SHOP</a>
-  <a href="#">ARCHIVE</a>
-  <a href="#">INSTAGRAM</a>
+  <div class="container">
+    <h1>YOUR BRAND</h1>
+
+    <div class="links">
+      <a href="https://instagram.com/yourname">INSTAGRAM</a>
+      <a href="https://tiktok.com/@yourname">TIKTOK</a>
+      <a href="https://youtube.com/@yourname">YOUTUBE</a>
+      <a href="https://ebay.com/usr/yourname">EBAY</a>
+      <a href="https://depop.com/yourname">DEPOP</a>
+      <a href="https://mercari.com/u/yourname">MERCARI</a>
+      <a href="https://facebook.com/yourname">FACEBOOK</a>
+      <a href="https://poshmark.com/closet/yourname">POSHMARK</a>
+    </div>
+  </div>
 </body>
 </html>

@@ -8,7 +8,7 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      cursor: none;
+      font-family: Helvetica, Arial, sans-serif;
     }
 
     body {
@@ -16,112 +16,103 @@
       overflow: hidden;
       background: black;
       color: white;
-      font-family: Helvetica, Arial, sans-serif;
     }
 
-    /* CUSTOM CURSOR */
-    .cursor {
-      width: 12px;
-      height: 12px;
-      border: 1px solid white;
-      border-radius: 50%;
-      position: fixed;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      z-index: 9999;
-    }
-
-    /* LEFT MEDIA SLIDER */
+    /* BACKGROUND SLIDESHOW */
     .slider {
-      position: absolute;
-      width: 75%;
-      height: 100%;
-      overflow: hidden;
+      position: fixed;
+      inset: 0;
+      z-index: 1;
     }
 
     .slide {
       position: absolute;
-      width: 110%;
-      height: 110%;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
       opacity: 0;
-      transition: opacity 2.5s ease;
+      transition: opacity 2.8s ease;
+      transform: scale(1.03);
     }
 
     .active {
       opacity: 1;
     }
 
-    /* RIGHT MENU */
-    .menu {
-      position: absolute;
-      right: 5%;
-      top: 20%;
+    /* DARK OVERLAY FOR READABILITY */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 2;
+    }
+
+    /* CENTER CONTENT */
+    .content {
+      position: relative;
+      z-index: 3;
+      height: 100vh;
       display: flex;
       flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
       gap: 45px;
-      text-align: right;
     }
 
+    /* BRAND TITLE */
     h1 {
-      font-size: 22px;
-      letter-spacing: 5px;
+      font-size: 28px;
+      letter-spacing: 6px;
       font-weight: 300;
       text-transform: uppercase;
-      margin-bottom: 20px;
+      opacity: 0.95;
     }
 
-    .nav-item {
+    /* NAV */
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
       font-size: 14px;
-      position: relative;
+    }
+
+    .item {
+      cursor: pointer;
+      letter-spacing: 3px;
+      text-transform: uppercase;
       transition: 0.3s;
     }
 
-    /* ❌ REMOVED ALL SHAKE / GLITCH HOVER */
+    .item:hover {
+      opacity: 0.5;
+    }
 
-    .nav-item a {
+    a {
       color: white;
       text-decoration: none;
     }
 
-    .nav-item:hover {
-      opacity: 0.6;
-    }
-
-    /* DROPDOWNS */
+    /* DROPDOWN */
     .dropdown {
-      max-height: 0;
-      overflow: hidden;
-      display: flex;
+      display: none;
       flex-direction: column;
       gap: 10px;
       margin-top: 10px;
       font-size: 12px;
-      transition: max-height 0.4s ease;
-    }
-
-    .dropdown.open {
-      max-height: 300px;
+      letter-spacing: 2px;
     }
 
     .dropdown a {
-      color: white;
-      opacity: 0.5;
-      text-decoration: none;
+      opacity: 0.6;
     }
 
     .dropdown a:hover {
       opacity: 1;
     }
 
-    /* GRAIN */
-    .grain {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      opacity: 0.12;
-      background-image: url('https://grainy-gradients.vercel.app/noise.svg');
+    .open {
+      display: flex;
     }
 
   </style>
@@ -129,11 +120,8 @@
 
 <body>
 
-<div class="cursor"></div>
-
-<!-- MEDIA -->
+<!-- BACKGROUND -->
 <div class="slider">
-
   <img src="image1.jpg" class="slide active">
   <img src="image2.jpg" class="slide">
 
@@ -142,65 +130,58 @@
   </video>
 
   <img src="image3.jpg" class="slide">
-
-  <div class="grain"></div>
-
 </div>
 
-<!-- MENU -->
-<div class="menu">
+<div class="overlay"></div>
 
-  <h1>Blend The Vision</h1>
+<!-- CONTENT -->
+<div class="content">
 
-  <div class="nav-item">
-    <a href="blend.html">Blend The Vision</a>
-  </div>
+  <h1>𝙱𝚕𝚎𝚗𝚍 𝚃𝚑𝚎 𝚅𝚒𝚜𝚒𝚘𝚗</h1>
 
-  <div class="nav-item" onclick="toggleDropdown('curation')">
-    Curation
-    <div class="dropdown" id="curation">
-      <a href="https://www.ebay.com/usr/earthscloset">eBay</a>
-      <a href="https://www.depop.com/earthsclosetdepop/">Depop</a>
-      <a href="https://www.mercari.com/u/earthscloset/">Mercari</a>
-      <a href="https://poshmark.com/closet/earths_closet">Poshmark</a>
+  <div class="nav">
+
+    <div class="item">
+      <a href="blend.html">Blend The Vision</a>
     </div>
-  </div>
 
-  <div class="nav-item" onclick="toggleDropdown('outlets')">
-    Outlets
-    <div class="dropdown" id="outlets">
-      <a href="https://www.instagram.com/earths_closet_shop/">Instagram</a>
-      <a href="https://tiktok.com/@yourname">TikTok</a>
-      <a href="https://youtube.com/@yourname">YouTube</a>
-      <a href="https://facebook.com/yourname">Facebook</a>
+    <div class="item" onclick="toggle('curation')">
+      Curation
+      <div class="dropdown" id="curation">
+        <a href="https://www.ebay.com/usr/earthscloset">eBay</a>
+        <a href="https://www.depop.com/earthsclosetdepop/">Depop</a>
+        <a href="https://www.mercari.com/u/earthscloset/">Mercari</a>
+        <a href="https://poshmark.com/closet/earths_closet">Poshmark</a>
+      </div>
     </div>
+
+    <div class="item" onclick="toggle('outlets')">
+      Outlets
+      <div class="dropdown" id="outlets">
+        <a href="https://www.instagram.com/earths_closet_shop/">Instagram</a>
+        <a href="https://tiktok.com/@yourname">TikTok</a>
+        <a href="https://youtube.com/@yourname">YouTube</a>
+        <a href="https://facebook.com/yourname">Facebook</a>
+      </div>
+    </div>
+
   </div>
 
 </div>
 
 <script>
-  // CURSOR
-  const cursor = document.querySelector(".cursor");
-
-  document.addEventListener("mousemove", (e) => {
-    cursor.style.left = e.clientX + "px";
-    cursor.style.top = e.clientY + "px";
-  });
-
-  // SLIDER
+  // SLIDESHOW
   let slides = document.querySelectorAll(".slide");
-  let index = 0;
+  let i = 0;
 
-  function showSlide() {
-    slides.forEach(s => s.classList.remove("active"));
-    slides[index].classList.add("active");
-    index = (index + 1) % slides.length;
-  }
-
-  setInterval(showSlide, 5000);
+  setInterval(() => {
+    slides[i].classList.remove("active");
+    i = (i + 1) % slides.length;
+    slides[i].classList.add("active");
+  }, 5000);
 
   // DROPDOWN
-  function toggleDropdown(id) {
+  function toggle(id) {
     document.getElementById(id).classList.toggle("open");
   }
 </script>

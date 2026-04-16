@@ -36,12 +36,6 @@
       opacity: 0.95;
     }
 
-    .enter-title {
-      font-size: 18px;
-      letter-spacing: 6px;
-      text-transform: uppercase;
-    }
-
     .enter-btn {
       font-size: 12px;
       letter-spacing: 4px;
@@ -50,16 +44,12 @@
       cursor: pointer;
     }
 
-    .enter-btn:hover {
-      opacity: 0.5;
-    }
-
     .hidden {
       opacity: 0;
       pointer-events: none;
     }
 
-    /* SLIDER */
+    /* SLIDES */
     .slider {
       position: fixed;
       inset: 0;
@@ -85,36 +75,30 @@
       object-fit: cover;
     }
 
-    /* DOTS */
-    .dots {
+    /* PROGRESS BAR */
+    .progress-container {
       position: fixed;
-      bottom: 40px;
+      bottom: 25px;
       left: 50%;
       transform: translateX(-50%);
-      display: flex;
-      gap: 10px;
+      width: 200px;
+      height: 2px;
+      background: rgba(255,255,255,0.2);
       z-index: 5;
     }
 
-    .dot {
-      width: 8px;
-      height: 8px;
-      border: 1px solid white;
-      border-radius: 50%;
-      cursor: pointer;
-      opacity: 0.5;
-    }
-
-    .dot.active {
+    .progress-bar {
+      height: 100%;
+      width: 0%;
       background: white;
-      opacity: 1;
+      transition: width linear;
     }
 
     /* OVERLAY */
     .overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.45);
+      background: rgba(0,0,0,0.4);
       z-index: 2;
     }
 
@@ -128,7 +112,6 @@
       text-transform: uppercase;
     }
 
-    /* RIGHT SIDE */
     .blend {
       position: fixed;
       top: 35px;
@@ -136,34 +119,6 @@
       z-index: 3;
       font-size: 11px;
       letter-spacing: 4px;
-    }
-
-    .nav {
-      position: fixed;
-      top: 75px;
-      right: 45px;
-      z-index: 3;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      text-align: right;
-    }
-
-    .dropdown {
-      display: none;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 10px;
-      font-size: 11px;
-    }
-
-    .open {
-      display: flex;
-    }
-
-    a {
-      color: white;
-      text-decoration: none;
     }
 
   </style>
@@ -174,34 +129,31 @@
 <!-- ENTER -->
 <div class="enter-screen" id="enter">
   <img src="White_earth_closet_logo-removebg-preview.png" class="enter-logo">
-  <div class="enter-title">Earth’s Closet</div>
   <div class="enter-btn" onclick="enterSite()">Enter Site</div>
 </div>
 
 <!-- SLIDES -->
-<div class="slider">
+<div class="slider" id="slider">
 
   <div class="slide active">
-    <img src="image1 (4).jpg">
+    <img src="image1.jpg">
   </div>
 
   <div class="slide">
-    <video muted loop>
-      <source src="video1 (2).mp4" type="video/mp4">
+    <video muted>
+      <source src="video1.mp4" type="video/mp4">
     </video>
   </div>
 
   <div class="slide">
-    <img src="image3.jpg">
+    <img src="image2.jpg">
   </div>
 
 </div>
 
-<!-- DOTS -->
-<div class="dots">
-  <div class="dot active" onclick="goToSlide(0)"></div>
-  <div class="dot" onclick="goToSlide(1)"></div>
-  <div class="dot" onclick="goToSlide(2)"></div>
+<!-- PROGRESS BAR -->
+<div class="progress-container">
+  <div class="progress-bar" id="progress"></div>
 </div>
 
 <div class="overlay"></div>
@@ -212,66 +164,105 @@
   <a href="blend.html">Blend The Vision</a>
 </div>
 
-<div class="nav">
-
-  <div onclick="toggle('curation')">
-    Curation
-    <div class="dropdown" id="curation">
-      <a href="#">eBay</a>
-      <a href="#">Depop</a>
-    </div>
-  </div>
-
-  <div onclick="toggle('outlets')">
-    Outlets
-    <div class="dropdown" id="outlets">
-      <a href="#">Instagram</a>
-      <a href="#">TikTok</a>
-    </div>
-  </div>
-
-</div>
-
 <script>
   function enterSite() {
     document.getElementById("enter").classList.add("hidden");
+    startAuto();
   }
 
   let slides = document.querySelectorAll(".slide");
-  let dots = document.querySelectorAll(".dot");
   let current = 0;
+  let progress = document.getElementById("progress");
+  let interval;
+  let startX = 0;
 
-  function goToSlide(index) {
+  function showSlide(index) {
 
-    // remove active
-    slides[current].classList.remove("active");
-    dots[current].classList.remove("active");
-
-    // stop video
+    // stop previous video
     let prevVideo = slides[current].querySelector("video");
     if (prevVideo) {
       prevVideo.pause();
       prevVideo.currentTime = 0;
     }
 
+    slides[current].classList.remove("active");
+
     current = index;
 
     slides[current].classList.add("active");
-    dots[current].classList.add("active");
 
-    // play video
-    let newVideo = slides[current].querySelector("video");
-    if (newVideo) {
-      newVideo.play();
+    let video = slides[current].querySelector("video");
+
+    if (video) {
+      video.currentTime = 0;
+      video.play();
+
+      progress.style.transition = "none";
+      progress.style.width = "0%";
+
+      setTimeout(() => {
+        progress.style.transition = `width ${video.duration}s linear`;
+        progress.style.width = "100%";
+      }, 100);
+
+      video.onended = () => nextSlide();
+
+    } else {
+      progress.style.transition = "none";
+      progress.style.width = "0%";
+
+      setTimeout(() => {
+        progress.style.transition = "width 8s linear";
+        progress.style.width = "100%";
+      }, 100);
+
+      clearInterval(interval);
+      interval = setTimeout(nextSlide, 8000);
     }
   }
 
-  function toggle(id) {
-    document.getElementById(id).classList.toggle("open");
+  function nextSlide() {
+    let next = (current + 1) % slides.length;
+    showSlide(next);
   }
+
+  function startAuto() {
+    showSlide(0);
+  }
+
+  /* SWIPE SUPPORT */
+  const slider = document.getElementById("slider");
+
+  slider.addEventListener("touchstart", e => {
+    startX = e.touches[0].clientX;
+  });
+
+  slider.addEventListener("touchend", e => {
+    let endX = e.changedTouches[0].clientX;
+
+    if (startX - endX > 50) nextSlide();
+    if (endX - startX > 50) showSlide((current - 1 + slides.length) % slides.length);
+  });
+
+  /* DESKTOP DRAG */
+  let isDown = false;
+
+  slider.addEventListener("mousedown", e => {
+    isDown = true;
+    startX = e.clientX;
+  });
+
+  slider.addEventListener("mouseup", e => {
+    if (!isDown) return;
+    isDown = false;
+
+    let diff = e.clientX - startX;
+
+    if (diff > 50) showSlide((current - 1 + slides.length) % slides.length);
+    if (diff < -50) nextSlide();
+  });
+
 </script>
 
-</body>
-</html>
 </body>
 </html>

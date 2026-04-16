@@ -80,7 +80,6 @@
       object-fit: cover;
     }
 
-    /* OVERLAY */
     .overlay {
       position: fixed;
       inset: 0;
@@ -88,7 +87,6 @@
       z-index: 2;
     }
 
-    /* BRAND */
     .brand {
       position: fixed;
       top: 35px;
@@ -123,34 +121,49 @@
       text-transform: uppercase;
     }
 
-    /* FIX: stable layout so buttons don't shift */
     .item {
       cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      position: relative;
     }
 
+    /* HEADER ROW */
     .item-header {
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
+    /* FIXED ARROW (NO SIZE CHANGE EVER) */
     .arrow {
       display: inline-block;
-      width: 12px;
-      text-align: center;
+      transition: transform 0.35s ease;
+      transform-origin: center;
     }
 
-    /* DROPDOWN */
+    .item.open .arrow {
+      transform: rotate(90deg);
+    }
+
+    /* DROPDOWN SMOOTH SLIDE */
     .dropdown {
-      display: none;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: max-height 0.35s ease, opacity 0.35s ease, transform 0.35s ease;
+      display: flex;
       flex-direction: column;
       gap: 8px;
       margin-top: 10px;
       font-size: 11px;
+    }
+
+    .item.open .dropdown {
+      max-height: 200px;
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .dropdown a {
@@ -162,16 +175,12 @@
       color: white;
     }
 
-    .open {
-      display: flex;
-    }
-
     a {
       color: white;
       text-decoration: none;
     }
 
-    /* CONTROLS FIX (no shifting) */
+    /* CONTROLS (FIXED JITTER) */
     .controls {
       position: fixed;
       bottom: 30px;
@@ -200,16 +209,61 @@
       display: flex;
       gap: 20px;
       font-size: 18px;
-      cursor: pointer;
       user-select: none;
     }
 
-    /* FIX: prevent movement when clicking */
+    /* FIX: no vertical shift ever */
     .buttons div {
       width: 24px;
-      text-align: center;
+      height: 24px;
       display: flex;
+      align-items: center;
       justify-content: center;
+      line-height: 1;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    /* PLAY BUTTON ANIMATION (NO SHAPE JUMP) */
+    .play {
+      position: relative;
+    }
+
+    .play::before,
+    .play::after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .play.playing::before {
+      content: "⏸";
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .play.playing::after {
+      content: "▶";
+      opacity: 0;
+      transform: scale(0.7);
+    }
+
+    .play:not(.playing)::before {
+      content: "⏸";
+      opacity: 0;
+      transform: scale(0.7);
+    }
+
+    .play:not(.playing)::after {
+      content: "▶";
+      opacity: 1;
+      transform: scale(1);
     }
 
   </style>
@@ -217,14 +271,12 @@
 
 <body>
 
-<!-- ENTER SCREEN -->
 <div class="enter-screen" id="enter">
   <img src="White_earth_closet_logo-removebg-preview.png" class="enter-logo">
   <div class="enter-title">Earth’s Closet</div>
   <div class="enter-btn" onclick="enterSite()">Enter Site</div>
 </div>
 
-<!-- SLIDES -->
 <div class="slider">
 
   <div class="slide active">
@@ -251,15 +303,14 @@
   <a href="blend.html">Blend The Vision</a>
 </div>
 
-<!-- NAV -->
 <div class="nav">
 
   <div class="item">
-    <div class="item-header" onclick="toggle('curation', this)">
+    <div class="item-header" onclick="toggle(this)">
       Curation <span class="arrow">></span>
     </div>
 
-    <div class="dropdown" id="curation">
+    <div class="dropdown">
       <a href="https://www.ebay.com/usr/earthscloset">eBay</a>
       <a href="https://www.depop.com/earthsclosetdepop/">Depop</a>
       <a href="https://www.mercari.com/u/earthscloset/">Mercari</a>
@@ -268,11 +319,11 @@
   </div>
 
   <div class="item">
-    <div class="item-header" onclick="toggle('outlets', this)">
+    <div class="item-header" onclick="toggle(this)">
       Outlets <span class="arrow">></span>
     </div>
 
-    <div class="dropdown" id="outlets">
+    <div class="dropdown">
       <a href="https://www.instagram.com/earths_closet_shop/">Instagram</a>
       <a href="https://tiktok.com/@yourname">TikTok</a>
       <a href="https://youtube.com/@yourname">YouTube</a>
@@ -282,12 +333,13 @@
 
 </div>
 
-<!-- CONTROLS -->
 <div class="controls">
 
   <div class="buttons">
     <div onclick="prevSlide()">&#8592;</div>
-    <div onclick="togglePlay()" id="playBtn">⏸</div>
+
+    <div id="playBtn" class="play playing" onclick="togglePlay()"></div>
+
     <div onclick="nextSlide()">&#8594;</div>
   </div>
 
@@ -336,18 +388,12 @@
 
       if (video) {
         video.play();
-
-        progress.style.transition = `width ${duration}s linear`;
-        progress.style.width = "100%";
-
-        timer = setTimeout(nextSlide, duration * 1000);
-
-      } else {
-        progress.style.transition = `width 10s linear`;
-        progress.style.width = "100%";
-
-        timer = setTimeout(nextSlide, 10000);
       }
+
+      progress.style.transition = `width ${duration}s linear`;
+      progress.style.width = "100%";
+
+      timer = setTimeout(nextSlide, duration * 1000);
 
     }, 80);
   }
@@ -363,30 +409,21 @@
   function togglePlay() {
     playing = !playing;
 
-    let video = slides[current].querySelector("video");
+    document.getElementById("playBtn").classList.toggle("playing");
 
-    document.getElementById("playBtn").textContent = playing ? "⏸" : "▶";
+    let video = slides[current].querySelector("video");
 
     if (!playing) {
       clearTimeout(timer);
       if (video) video.pause();
-      progress.style.animationPlayState = "paused";
     } else {
       if (video) video.play();
       showSlide(current);
     }
   }
 
-  function toggle(id, el) {
-    document.getElementById(id).classList.toggle("open");
-
-    let arrow = el.querySelector(".arrow");
-
-    if (document.getElementById(id).classList.contains("open")) {
-      arrow.textContent = "˅";
-    } else {
-      arrow.textContent = ">";
-    }
+  function toggle(el) {
+    el.parentElement.classList.toggle("open");
   }
 </script>
 

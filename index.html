@@ -1,66 +1,161 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Your Brand</title>
+  <title>Blend The Vision</title>
 
   <style>
-    body {
-      background: white;
-      color: black;
-      font-family: Helvetica, Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+    * {
       margin: 0;
-      letter-spacing: 2px;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Courier New", monospace;
     }
 
-    .container {
-      text-align: center;
+    body {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      background: white;
+    }
+
+    /* SLIDER */
+    .slider {
+      width: 75%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+    }
+
+    .active {
+      opacity: 1;
+    }
+
+    /* RIGHT MENU */
+    .menu {
+      width: 25%;
+      padding: 50px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: white;
     }
 
     h1 {
-      margin-bottom: 40px;
+      font-size: 24px;
+      letter-spacing: 3px;
+      margin-bottom: 50px;
     }
 
-    .links {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
+    .nav-item {
+      margin-bottom: 25px;
+      cursor: pointer;
+      font-size: 15px;
     }
 
-    .links a {
+    .nav-item a {
       text-decoration: none;
       color: black;
-      border: 1px solid black;
-      padding: 10px 20px;
-      transition: 0.3s;
-      width: 200px;
-      margin: auto;
     }
 
-    .links a:hover {
-      background: black;
-      color: white;
+    .dropdown {
+      margin-top: 10px;
+      margin-left: 10px;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 13px;
     }
+
+    .dropdown a {
+      text-decoration: none;
+      color: black;
+      opacity: 0.6;
+      transition: 0.2s;
+    }
+
+    .dropdown a:hover {
+      opacity: 1;
+    }
+
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>YOUR BRAND</h1>
 
-    <div class="links">
-      <a href="https://www.instagram.com/earths_closet_shop/">INSTAGRAM</a>
-      <a href="https://tiktok.com/@yourname">TIKTOK</a>
-      <a href="https://youtube.com/@yourname">YOUTUBE</a>
-      <a href="https://www.ebay.com/usr/earthscloset">EBAY</a>
-      <a href="https://www.depop.com/earthsclosetdepop/">DEPOP</a>
-      <a href="https://www.mercari.com/u/earthscloset/">MERCARI</a>
-      <a href="https://facebook.com/yourname">FACEBOOK</a>
-      <a href="https://poshmark.com/closet/earths_closet">POSHMARK</a>
-    </div>
+  <!-- LEFT SIDE SLIDER -->
+  <div class="slider">
+
+    <img src="image1.jpg" class="slide active">
+    <img src="image2.jpg" class="slide">
+
+    <video class="slide" autoplay muted loop>
+      <source src="video1.mp4" type="video/mp4">
+    </video>
+
+    <img src="image3.jpg" class="slide">
+
   </div>
+
+  <!-- RIGHT SIDE MENU -->
+  <div class="menu">
+
+    <h1>𝙱𝚕𝚎𝚗𝚍 𝚃𝚑𝚎 𝚅𝚒𝚜𝚒𝚘𝚗</h1>
+
+    <div class="nav-item">
+      <a href="blend.html">Blend The Vision</a>
+    </div>
+
+    <div class="nav-item" onclick="toggleDropdown('curation')">
+      Curation
+      <div class="dropdown" id="curation">
+        <a href="https://www.ebay.com/usr/earthscloset">eBay</a>
+        <a href="https://www.depop.com/earthsclosetdepop/">Depop</a>
+        <a href="https://www.mercari.com/u/earthscloset/">Mercari</a>
+        <a href="https://poshmark.com/closet/earths_closet">Poshmark</a>
+      </div>
+    </div>
+
+    <div class="nav-item" onclick="toggleDropdown('outlets')">
+      Outlets
+      <div class="dropdown" id="outlets">
+        <a href="https://www.instagram.com/earths_closet_shop/">Instagram</a>
+        <a href="https://tiktok.com/@yourname">TikTok</a>
+        <a href="https://youtube.com/@yourname">YouTube</a>
+        <a href="https://facebook.com/yourname">Facebook</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    // SLIDER
+    let slides = document.querySelectorAll(".slide");
+    let index = 0;
+
+    function showSlide() {
+      slides.forEach(slide => slide.classList.remove("active"));
+      slides[index].classList.add("active");
+      index = (index + 1) % slides.length;
+    }
+
+    setInterval(showSlide, 3500);
+
+    // DROPDOWNS
+    function toggleDropdown(id) {
+      const el = document.getElementById(id);
+      el.style.display = el.style.display === "flex" ? "none" : "flex";
+    }
+  </script>
+
 </body>
 </html>

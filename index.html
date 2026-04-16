@@ -361,6 +361,9 @@
   let timer;
   let playing = true;
 
+  let startTime = 0;
+  let remaining = 0;
+
   function showSlide(index) {
 
     clearTimeout(timer);
@@ -378,6 +381,7 @@
     let video = slides[current].querySelector("video");
 
     let duration = video && video.duration ? video.duration : 10;
+    remaining = duration * 1000;
 
     progress.style.transition = "none";
     progress.style.width = "0%";
@@ -386,14 +390,14 @@
 
       if (!playing) return;
 
-      if (video) {
-        video.play();
-      }
+      if (video) video.play();
+
+      startTime = Date.now();
 
       progress.style.transition = `width ${duration}s linear`;
       progress.style.width = "100%";
 
-      timer = setTimeout(nextSlide, duration * 1000);
+      timer = setTimeout(nextSlide, remaining);
 
     }, 80);
   }
@@ -415,10 +419,30 @@
 
     if (!playing) {
       clearTimeout(timer);
+
       if (video) video.pause();
+
+      // calculate remaining time
+      let elapsed = Date.now() - startTime;
+      remaining = Math.max(remaining - elapsed, 0);
+
+      // freeze progress exactly where it is
+      let percent = (elapsed / (elapsed + remaining)) * 100;
+      progress.style.transition = "none";
+      progress.style.width = percent + "%";
+
     } else {
+
+      let video = slides[current].querySelector("video");
+
       if (video) video.play();
-      showSlide(current);
+
+      startTime = Date.now();
+
+      progress.style.transition = `width ${remaining/1000}s linear`;
+      progress.style.width = "100%";
+
+      timer = setTimeout(nextSlide, remaining);
     }
   }
 

@@ -35,6 +35,12 @@
       width: 400px;
     }
 
+    .enter-title {
+      font-size: 18px;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+    }
+
     .enter-btn {
       font-size: 12px;
       letter-spacing: 4px;
@@ -82,7 +88,7 @@
       z-index: 2;
     }
 
-    /* BRAND (TOP LEFT NOW VISIBLE) */
+    /* BRAND */
     .brand {
       position: fixed;
       top: 35px;
@@ -93,13 +99,12 @@
       text-transform: uppercase;
     }
 
-    /* BLEND (BIGGER) */
     .blend {
       position: fixed;
       top: 35px;
       right: 45px;
       z-index: 3;
-      font-size: 13px; /* increased */
+      font-size: 13px;
       letter-spacing: 5px;
     }
 
@@ -118,17 +123,28 @@
       text-transform: uppercase;
     }
 
+    /* FIX: stable layout so buttons don't shift */
     .item {
       cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      position: relative;
     }
 
-    /* ADD DROPDOWN ARROWS */
-    .item::after {
-      content: " ▾";
-      opacity: 0.6;
+    .item-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    /* DROPDOWN STYLE */
+    .arrow {
+      display: inline-block;
+      width: 12px;
+      text-align: center;
+    }
+
+    /* DROPDOWN */
     .dropdown {
       display: none;
       flex-direction: column;
@@ -138,12 +154,12 @@
     }
 
     .dropdown a {
-      color: rgba(255,255,255,0.5); /* greyed */
+      color: rgba(255,255,255,0.5);
       transition: 0.3s;
     }
 
     .dropdown a:hover {
-      color: white; /* brighten */
+      color: white;
     }
 
     .open {
@@ -155,7 +171,7 @@
       text-decoration: none;
     }
 
-    /* CONTROLS */
+    /* CONTROLS FIX (no shifting) */
     .controls {
       position: fixed;
       bottom: 30px;
@@ -185,11 +201,15 @@
       gap: 20px;
       font-size: 18px;
       cursor: pointer;
+      user-select: none;
     }
 
+    /* FIX: prevent movement when clicking */
     .buttons div {
-      width: 24px; /* FIXED SIZE */
+      width: 24px;
       text-align: center;
+      display: flex;
+      justify-content: center;
     }
 
   </style>
@@ -197,11 +217,14 @@
 
 <body>
 
+<!-- ENTER SCREEN -->
 <div class="enter-screen" id="enter">
   <img src="White_earth_closet_logo-removebg-preview.png" class="enter-logo">
+  <div class="enter-title">Earth’s Closet</div>
   <div class="enter-btn" onclick="enterSite()">Enter Site</div>
 </div>
 
+<!-- SLIDES -->
 <div class="slider">
 
   <div class="slide active">
@@ -228,10 +251,14 @@
   <a href="blend.html">Blend The Vision</a>
 </div>
 
+<!-- NAV -->
 <div class="nav">
 
-  <div class="item" onclick="toggle('curation')">
-    Curation
+  <div class="item">
+    <div class="item-header" onclick="toggle('curation', this)">
+      Curation <span class="arrow">></span>
+    </div>
+
     <div class="dropdown" id="curation">
       <a href="https://www.ebay.com/usr/earthscloset">eBay</a>
       <a href="https://www.depop.com/earthsclosetdepop/">Depop</a>
@@ -240,8 +267,11 @@
     </div>
   </div>
 
-  <div class="item" onclick="toggle('outlets')">
-    Outlets
+  <div class="item">
+    <div class="item-header" onclick="toggle('outlets', this)">
+      Outlets <span class="arrow">></span>
+    </div>
+
     <div class="dropdown" id="outlets">
       <a href="https://www.instagram.com/earths_closet_shop/">Instagram</a>
       <a href="https://tiktok.com/@yourname">TikTok</a>
@@ -252,6 +282,7 @@
 
 </div>
 
+<!-- CONTROLS -->
 <div class="controls">
 
   <div class="buttons">
@@ -277,8 +308,6 @@
   let progress = document.getElementById("progress");
   let timer;
   let playing = true;
-  let startTime;
-  let remaining = 0;
 
   function showSlide(index) {
 
@@ -297,25 +326,30 @@
     let video = slides[current].querySelector("video");
 
     let duration = video && video.duration ? video.duration : 10;
-    remaining = duration * 1000;
 
-    startProgress(duration);
-
-    if (video) video.play();
-
-    startTime = Date.now();
-
-    timer = setTimeout(nextSlide, remaining);
-  }
-
-  function startProgress(duration) {
     progress.style.transition = "none";
     progress.style.width = "0%";
 
     setTimeout(() => {
-      progress.style.transition = `width ${duration}s linear`;
-      progress.style.width = "100%";
-    }, 50);
+
+      if (!playing) return;
+
+      if (video) {
+        video.play();
+
+        progress.style.transition = `width ${duration}s linear`;
+        progress.style.width = "100%";
+
+        timer = setTimeout(nextSlide, duration * 1000);
+
+      } else {
+        progress.style.transition = `width 10s linear`;
+        progress.style.width = "100%";
+
+        timer = setTimeout(nextSlide, 10000);
+      }
+
+    }, 80);
   }
 
   function nextSlide() {
@@ -331,34 +365,28 @@
 
     let video = slides[current].querySelector("video");
 
+    document.getElementById("playBtn").textContent = playing ? "⏸" : "▶";
+
     if (!playing) {
       clearTimeout(timer);
-
-      let elapsed = Date.now() - startTime;
-      remaining -= elapsed;
-
-      progress.style.transition = "none";
-      let percent = (elapsed / (elapsed + remaining)) * 100;
-      progress.style.width = percent + "%";
-
       if (video) video.pause();
-
+      progress.style.animationPlayState = "paused";
     } else {
-      startTime = Date.now();
-
-      progress.style.transition = `width ${remaining/1000}s linear`;
-      progress.style.width = "100%";
-
       if (video) video.play();
-
-      timer = setTimeout(nextSlide, remaining);
+      showSlide(current);
     }
-
-    document.getElementById("playBtn").textContent = playing ? "⏸" : "▶";
   }
 
-  function toggle(id) {
+  function toggle(id, el) {
     document.getElementById(id).classList.toggle("open");
+
+    let arrow = el.querySelector(".arrow");
+
+    if (document.getElementById(id).classList.contains("open")) {
+      arrow.textContent = "˅";
+    } else {
+      arrow.textContent = ">";
+    }
   }
 </script>
 

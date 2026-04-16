@@ -12,19 +12,57 @@
     }
 
     body {
-      height: 100vh;
       overflow: hidden;
       background: black;
       color: white;
+    }
+
+    /* =========================
+       ENTER SCREEN (CINEMATIC)
+    ========================== */
+    .enter-screen {
+      position: fixed;
+      inset: 0;
+      background: black;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 25px;
+      transition: opacity 1.2s ease;
+    }
+
+    .enter-title {
+      font-size: 20px;
+      letter-spacing: 6px;
+      font-weight: 300;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    .enter-btn {
+      font-size: 12px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      border: 1px solid white;
+      padding: 10px 18px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .enter-btn:hover {
+      opacity: 0.5;
+    }
+
+    .hidden {
       opacity: 0;
-      animation: fadeIn 1.2s ease forwards;
+      pointer-events: none;
     }
 
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-
-    /* BACKGROUND SLIDESHOW */
+    /* =========================
+       BACKGROUND SLIDESHOW
+    ========================== */
     .slider {
       position: fixed;
       inset: 0;
@@ -54,7 +92,9 @@
       z-index: 2;
     }
 
-    /* BRAND (TOP LEFT) */
+    /* =========================
+       BRAND (TOP LEFT)
+    ========================== */
     .brand {
       position: fixed;
       top: 35px;
@@ -64,37 +104,40 @@
       letter-spacing: 6px;
       font-weight: 300;
       text-transform: uppercase;
-      opacity: 0.95;
     }
 
-    /* SUB LINK */
-    .sub {
+    /* =========================
+       BLEND THE VISION (RIGHT SIDE)
+    ========================== */
+    .blend {
       position: fixed;
-      top: 65px;
-      left: 45px;
+      top: 35px;
+      right: 45px;
       z-index: 3;
       font-size: 11px;
-      letter-spacing: 3px;
+      letter-spacing: 4px;
       text-transform: uppercase;
-      opacity: 0.7;
+      opacity: 0.8;
     }
 
-    .sub a {
+    .blend a {
       color: white;
       text-decoration: none;
-      border-bottom: 1px solid rgba(255,255,255,0.3);
+      border-bottom: 1px solid rgba(255,255,255,0.25);
       padding-bottom: 2px;
       transition: 0.3s;
     }
 
-    .sub a:hover {
+    .blend a:hover {
       opacity: 0.5;
     }
 
-    /* NAV (TOP RIGHT) */
+    /* =========================
+       NAV (RIGHT SIDE BELOW)
+    ========================== */
     .nav {
       position: fixed;
-      top: 35px;
+      top: 75px;
       right: 45px;
       z-index: 3;
       display: flex;
@@ -109,7 +152,6 @@
     .item {
       cursor: pointer;
       transition: 0.3s;
-      position: relative;
     }
 
     .item:hover {
@@ -121,7 +163,7 @@
       text-decoration: none;
     }
 
-    /* DROPDOWN */
+    /* DROPDOWNS */
     .dropdown {
       display: none;
       flex-direction: column;
@@ -133,7 +175,6 @@
 
     .dropdown a {
       opacity: 0.6;
-      transition: 0.2s;
     }
 
     .dropdown a:hover {
@@ -144,34 +185,24 @@
       display: flex;
     }
 
-    /* HOVER PREVIEW BOX */
-    .preview {
-      position: fixed;
-      width: 180px;
-      height: 120px;
-      background-size: cover;
-      background-position: center;
-      border: 1px solid rgba(255,255,255,0.2);
-      pointer-events: none;
-      opacity: 0;
-      z-index: 10;
-      transition: opacity 0.2s ease;
-    }
-
   </style>
 </head>
 
 <body>
 
+<!-- ENTER SCREEN -->
+<div class="enter-screen" id="enter">
+  <div class="enter-title">Earth’s Closet</div>
+  <div class="enter-btn" onclick="enterSite()">Enter Site</div>
+</div>
+
 <!-- BACKGROUND -->
 <div class="slider">
   <img src="image1.jpg" class="slide active">
   <img src="image2.jpg" class="slide">
-
   <video class="slide" autoplay muted loop>
     <source src="video1.mp4" type="video/mp4">
   </video>
-
   <img src="image3.jpg" class="slide">
 </div>
 
@@ -180,15 +211,15 @@
 <!-- BRAND -->
 <div class="brand">Earth’s Closet</div>
 
-<!-- SUB -->
-<div class="sub">
+<!-- BLEND (RIGHT TOP) -->
+<div class="blend">
   <a href="blend.html">Blend The Vision</a>
 </div>
 
-<!-- NAV -->
+<!-- NAV (RIGHT SIDE) -->
 <div class="nav">
 
-  <div class="item" onclick="toggle('curation')" data-preview="image1.jpg">
+  <div class="item" onclick="toggle('curation')">
     Curation
     <div class="dropdown" id="curation">
       <a href="https://www.ebay.com/usr/earthscloset">eBay</a>
@@ -198,7 +229,7 @@
     </div>
   </div>
 
-  <div class="item" onclick="toggle('outlets')" data-preview="image2.jpg">
+  <div class="item" onclick="toggle('outlets')">
     Outlets
     <div class="dropdown" id="outlets">
       <a href="https://www.instagram.com/earths_closet_shop/">Instagram</a>
@@ -210,10 +241,12 @@
 
 </div>
 
-<!-- PREVIEW BOX -->
-<div class="preview" id="preview"></div>
-
 <script>
+  /* ENTER TRANSITION */
+  function enterSite() {
+    document.getElementById("enter").classList.add("hidden");
+  }
+
   /* SLIDESHOW */
   let slides = document.querySelectorAll(".slide");
   let i = 0;
@@ -228,26 +261,6 @@
   function toggle(id) {
     document.getElementById(id).classList.toggle("open");
   }
-
-  /* HOVER PREVIEW */
-  const preview = document.getElementById("preview");
-  const items = document.querySelectorAll(".item");
-
-  items.forEach(el => {
-    el.addEventListener("mousemove", (e) => {
-      const img = el.getAttribute("data-preview");
-      if (!img) return;
-
-      preview.style.backgroundImage = `url(${img})`;
-      preview.style.left = e.clientX + 20 + "px";
-      preview.style.top = e.clientY + 20 + "px";
-      preview.style.opacity = 1;
-    });
-
-    el.addEventListener("mouseleave", () => {
-      preview.style.opacity = 0;
-    });
-  });
 </script>
 
 </body>

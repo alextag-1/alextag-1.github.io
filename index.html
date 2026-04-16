@@ -82,28 +82,31 @@
       z-index: 2;
     }
 
-    /* BRAND */
+    /* BRAND (TOP LEFT NOW VISIBLE) */
     .brand {
       position: fixed;
       top: 35px;
       left: 45px;
       z-index: 3;
+      font-size: 18px;
       letter-spacing: 6px;
       text-transform: uppercase;
     }
 
+    /* BLEND (BIGGER) */
     .blend {
       position: fixed;
       top: 35px;
       right: 45px;
       z-index: 3;
-      font-size: 11px;
-      letter-spacing: 4px;
+      font-size: 13px; /* increased */
+      letter-spacing: 5px;
     }
 
+    /* NAV */
     .nav {
       position: fixed;
-      top: 75px;
+      top: 80px;
       right: 45px;
       z-index: 3;
       display: flex;
@@ -115,12 +118,32 @@
       text-transform: uppercase;
     }
 
+    .item {
+      cursor: pointer;
+    }
+
+    /* ADD DROPDOWN ARROWS */
+    .item::after {
+      content: " ▾";
+      opacity: 0.6;
+    }
+
+    /* DROPDOWN STYLE */
     .dropdown {
       display: none;
       flex-direction: column;
       gap: 8px;
       margin-top: 10px;
       font-size: 11px;
+    }
+
+    .dropdown a {
+      color: rgba(255,255,255,0.5); /* greyed */
+      transition: 0.3s;
+    }
+
+    .dropdown a:hover {
+      color: white; /* brighten */
     }
 
     .open {
@@ -164,18 +187,21 @@
       cursor: pointer;
     }
 
+    .buttons div {
+      width: 24px; /* FIXED SIZE */
+      text-align: center;
+    }
+
   </style>
 </head>
 
 <body>
 
-<!-- ENTER -->
 <div class="enter-screen" id="enter">
   <img src="White_earth_closet_logo-removebg-preview.png" class="enter-logo">
   <div class="enter-btn" onclick="enterSite()">Enter Site</div>
 </div>
 
-<!-- SLIDES -->
 <div class="slider">
 
   <div class="slide active">
@@ -202,10 +228,9 @@
   <a href="blend.html">Blend The Vision</a>
 </div>
 
-<!-- NAV (UNCHANGED) -->
 <div class="nav">
 
-  <div onclick="toggle('curation')">
+  <div class="item" onclick="toggle('curation')">
     Curation
     <div class="dropdown" id="curation">
       <a href="https://www.ebay.com/usr/earthscloset">eBay</a>
@@ -215,7 +240,7 @@
     </div>
   </div>
 
-  <div onclick="toggle('outlets')">
+  <div class="item" onclick="toggle('outlets')">
     Outlets
     <div class="dropdown" id="outlets">
       <a href="https://www.instagram.com/earths_closet_shop/">Instagram</a>
@@ -227,7 +252,6 @@
 
 </div>
 
-<!-- CONTROLS -->
 <div class="controls">
 
   <div class="buttons">
@@ -253,6 +277,8 @@
   let progress = document.getElementById("progress");
   let timer;
   let playing = true;
+  let startTime;
+  let remaining = 0;
 
   function showSlide(index) {
 
@@ -270,37 +296,26 @@
 
     let video = slides[current].querySelector("video");
 
+    let duration = video && video.duration ? video.duration : 10;
+    remaining = duration * 1000;
+
+    startProgress(duration);
+
+    if (video) video.play();
+
+    startTime = Date.now();
+
+    timer = setTimeout(nextSlide, remaining);
+  }
+
+  function startProgress(duration) {
     progress.style.transition = "none";
     progress.style.width = "0%";
 
     setTimeout(() => {
-
-      if (!playing) return;
-
-      if (video) {
-        video.play().catch(() => {});
-
-        let duration = 10; // fallback
-
-        if (!isNaN(video.duration) && video.duration > 0) {
-          duration = video.duration;
-        }
-
-        progress.style.transition = `width ${duration}s linear`;
-        progress.style.width = "100%";
-
-        timer = setTimeout(nextSlide, duration * 1000);
-
-      } else {
-        let duration = 10;
-
-        progress.style.transition = `width ${duration}s linear`;
-        progress.style.width = "100%";
-
-        timer = setTimeout(nextSlide, duration * 1000);
-      }
-
-    }, 100);
+      progress.style.transition = `width ${duration}s linear`;
+      progress.style.width = "100%";
+    }, 50);
   }
 
   function nextSlide() {
@@ -314,17 +329,32 @@
   function togglePlay() {
     playing = !playing;
 
-    document.getElementById("playBtn").innerText = playing ? "⏸" : "▶";
-
     let video = slides[current].querySelector("video");
 
-    if (playing) {
-      showSlide(current);
-    } else {
+    if (!playing) {
       clearTimeout(timer);
+
+      let elapsed = Date.now() - startTime;
+      remaining -= elapsed;
+
       progress.style.transition = "none";
+      let percent = (elapsed / (elapsed + remaining)) * 100;
+      progress.style.width = percent + "%";
+
       if (video) video.pause();
+
+    } else {
+      startTime = Date.now();
+
+      progress.style.transition = `width ${remaining/1000}s linear`;
+      progress.style.width = "100%";
+
+      if (video) video.play();
+
+      timer = setTimeout(nextSlide, remaining);
     }
+
+    document.getElementById("playBtn").textContent = playing ? "⏸" : "▶";
   }
 
   function toggle(id) {

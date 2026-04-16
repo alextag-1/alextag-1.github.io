@@ -33,13 +33,6 @@
 
     .enter-logo {
       width: 400px;
-      opacity: 0.95;
-    }
-
-    .enter-title {
-      font-size: 18px;
-      letter-spacing: 6px;
-      text-transform: uppercase;
     }
 
     .enter-btn {
@@ -50,16 +43,12 @@
       cursor: pointer;
     }
 
-    .enter-btn:hover {
-      opacity: 0.5;
-    }
-
     .hidden {
       opacity: 0;
       pointer-events: none;
     }
 
-    /* SLIDER */
+    /* SLIDES */
     .slider {
       position: fixed;
       inset: 0;
@@ -70,7 +59,7 @@
       position: absolute;
       inset: 0;
       opacity: 0;
-      transition: opacity 2s ease;
+      transition: opacity 1.8s ease;
     }
 
     .slide.active {
@@ -83,24 +72,6 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-    }
-
-    /* PROGRESS BAR */
-    .progress-container {
-      position: fixed;
-      bottom: 35px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 220px;
-      height: 2px;
-      background: rgba(255,255,255,0.2);
-      z-index: 5;
-    }
-
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: white;
     }
 
     /* OVERLAY */
@@ -117,12 +88,10 @@
       top: 35px;
       left: 45px;
       z-index: 3;
-      font-size: 18px;
       letter-spacing: 6px;
       text-transform: uppercase;
     }
 
-    /* RIGHT SIDE */
     .blend {
       position: fixed;
       top: 35px;
@@ -132,12 +101,7 @@
       letter-spacing: 4px;
     }
 
-    .blend a {
-      color: white;
-      text-decoration: none;
-      border-bottom: 1px solid rgba(255,255,255,0.3);
-    }
-
+    /* NAV */
     .nav {
       position: fixed;
       top: 75px;
@@ -147,9 +111,6 @@
       flex-direction: column;
       gap: 18px;
       text-align: right;
-      font-size: 12px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
     }
 
     .dropdown {
@@ -169,6 +130,49 @@
       text-decoration: none;
     }
 
+    /* CONTROLS */
+    .controls {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .progress-container {
+      width: 220px;
+      height: 2px;
+      background: rgba(255,255,255,0.2);
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: white;
+    }
+
+    .buttons {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 18px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .btn {
+      opacity: 0.7;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      opacity: 1;
+    }
+
   </style>
 </head>
 
@@ -177,7 +181,6 @@
 <!-- ENTER -->
 <div class="enter-screen" id="enter">
   <img src="White_earth_closet_logo-removebg-preview.png" class="enter-logo">
-  <div class="enter-title">Earth’s Closet</div>
   <div class="enter-btn" onclick="enterSite()">Enter Site</div>
 </div>
 
@@ -200,11 +203,6 @@
 
 </div>
 
-<!-- PROGRESS -->
-<div class="progress-container">
-  <div class="progress-bar" id="progress"></div>
-</div>
-
 <div class="overlay"></div>
 
 <div class="brand">Earth’s Closet</div>
@@ -213,26 +211,17 @@
   <a href="blend.html">Blend The Vision</a>
 </div>
 
-<div class="nav">
+<!-- CONTROLS -->
+<div class="controls">
 
-  <div onclick="toggle('curation')">
-    Curation
-    <div class="dropdown" id="curation">
-      <a href="https://www.ebay.com/usr/earthscloset">eBay</a>
-      <a href="https://www.depop.com/earthsclosetdepop/">Depop</a>
-      <a href="https://www.mercari.com/u/earthscloset/">Mercari</a>
-      <a href="https://poshmark.com/closet/earths_closet">Poshmark</a>
-    </div>
+  <div class="buttons">
+    <div class="btn" onclick="prevSlide()">&#8592;</div>
+    <div class="btn" onclick="togglePlay()" id="playBtn">⏸</div>
+    <div class="btn" onclick="nextSlide()">&#8594;</div>
   </div>
 
-  <div onclick="toggle('outlets')">
-    Outlets
-    <div class="dropdown" id="outlets">
-      <a href="https://www.instagram.com/earths_closet_shop/">Instagram</a>
-      <a href="https://tiktok.com/@yourname">TikTok</a>
-      <a href="https://youtube.com/@yourname">YouTube</a>
-      <a href="https://facebook.com/yourname">Facebook</a>
-    </div>
+  <div class="progress-container">
+    <div class="progress-bar" id="progress"></div>
   </div>
 
 </div>
@@ -247,6 +236,7 @@
   let current = 0;
   let progress = document.getElementById("progress");
   let timer;
+  let playing = true;
 
   function showSlide(index) {
 
@@ -268,6 +258,8 @@
     progress.style.width = "0%";
 
     setTimeout(() => {
+
+      if (!playing) return;
 
       if (video) {
         video.onloadedmetadata = () => {
@@ -294,8 +286,27 @@
   }
 
   function nextSlide() {
-    let next = (current + 1) % slides.length;
-    showSlide(next);
+    showSlide((current + 1) % slides.length);
+  }
+
+  function prevSlide() {
+    showSlide((current - 1 + slides.length) % slides.length);
+  }
+
+  function togglePlay() {
+    playing = !playing;
+    document.getElementById("playBtn").innerText = playing ? "⏸" : "▶";
+
+    let video = slides[current].querySelector("video");
+
+    if (playing) {
+      showSlide(current);
+    } else {
+      clearTimeout(timer);
+      progress.style.transition = "none";
+
+      if (video) video.pause();
+    }
   }
 
   function startSlider() {

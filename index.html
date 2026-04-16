@@ -18,7 +18,7 @@
     }
 
     /* =========================
-       ENTER SCREEN (CINEMATIC)
+       ENTER SCREEN
     ========================== */
     .enter-screen {
       position: fixed;
@@ -29,12 +29,20 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 25px;
+      gap: 18px;
       transition: opacity 1.2s ease;
     }
 
+    .enter-logo {
+      width: 130px;
+      height: auto;
+      object-fit: contain;
+      opacity: 0.95;
+      margin-bottom: 10px;
+    }
+
     .enter-title {
-      font-size: 20px;
+      font-size: 18px;
       letter-spacing: 6px;
       font-weight: 300;
       text-transform: uppercase;
@@ -104,10 +112,11 @@
       letter-spacing: 6px;
       font-weight: 300;
       text-transform: uppercase;
+      opacity: 0.95;
     }
 
     /* =========================
-       BLEND THE VISION (RIGHT SIDE)
+       BLEND THE VISION (TOP RIGHT)
     ========================== */
     .blend {
       position: fixed;
@@ -117,7 +126,6 @@
       font-size: 11px;
       letter-spacing: 4px;
       text-transform: uppercase;
-      opacity: 0.8;
     }
 
     .blend a {
@@ -133,7 +141,7 @@
     }
 
     /* =========================
-       NAV (RIGHT SIDE BELOW)
+       NAV (RIGHT SIDE)
     ========================== */
     .nav {
       position: fixed;
@@ -192,17 +200,22 @@
 
 <!-- ENTER SCREEN -->
 <div class="enter-screen" id="enter">
+  <img src="logo.png" class="enter-logo">
+
   <div class="enter-title">Earth’s Closet</div>
+
   <div class="enter-btn" onclick="enterSite()">Enter Site</div>
 </div>
 
 <!-- BACKGROUND -->
 <div class="slider">
-  <img src="image1 (4).jpg" class="slide active">
+  <img src="image1.jpg" class="slide active">
   <img src="image2.jpg" class="slide">
+
   <video class="slide" autoplay muted loop>
     <source src="video1.mp4" type="video/mp4">
   </video>
+
   <img src="image3.jpg" class="slide">
 </div>
 
@@ -211,12 +224,12 @@
 <!-- BRAND -->
 <div class="brand">Earth’s Closet</div>
 
-<!-- BLEND (RIGHT TOP) -->
+<!-- BLEND -->
 <div class="blend">
   <a href="blend.html">Blend The Vision</a>
 </div>
 
-<!-- NAV (RIGHT SIDE) -->
+<!-- NAV -->
 <div class="nav">
 
   <div class="item" onclick="toggle('curation')">
@@ -242,12 +255,12 @@
 </div>
 
 <script>
-  /* ENTER TRANSITION */
+  // ENTER TRANSITION
   function enterSite() {
     document.getElementById("enter").classList.add("hidden");
   }
 
-  /* SLIDESHOW */
+  // SLIDESHOW
   let slides = document.querySelectorAll(".slide");
   let i = 0;
 
@@ -257,7 +270,7 @@
     slides[i].classList.add("active");
   }, 5500);
 
-  /* DROPDOWNS */
+  // DROPDOWNS
   function toggle(id) {
     document.getElementById(id).classList.toggle("open");
   }

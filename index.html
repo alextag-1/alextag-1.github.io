@@ -39,7 +39,7 @@
       opacity: 1;
     }
 
-    /* DARK OVERLAY */
+    /* OVERLAY */
     .overlay {
       position: fixed;
       inset: 0;
@@ -47,51 +47,28 @@
       z-index: 2;
     }
 
-    /* CENTER CONTENT */
-    .content {
-      position: relative;
+    /* TOP LEFT BRAND */
+    .brand {
+      position: fixed;
+      top: 30px;
+      left: 40px;
       z-index: 3;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      gap: 40px;
-    }
-
-    h1 {
-      font-size: 30px;
+      font-size: 20px;
       letter-spacing: 6px;
       font-weight: 300;
       text-transform: uppercase;
     }
 
-    .sub {
-      font-size: 13px;
-      letter-spacing: 3px;
-      opacity: 0.8;
-      text-transform: uppercase;
-    }
-
-    .sub a {
-      color: white;
-      text-decoration: none;
-      border-bottom: 1px solid rgba(255,255,255,0.3);
-      padding-bottom: 3px;
-      transition: 0.3s;
-    }
-
-    .sub a:hover {
-      opacity: 0.5;
-    }
-
-    /* NAV */
+    /* TOP RIGHT NAV */
     .nav {
+      position: fixed;
+      top: 30px;
+      right: 40px;
+      z-index: 3;
       display: flex;
       flex-direction: column;
       gap: 18px;
-      margin-top: 20px;
+      text-align: right;
       font-size: 13px;
       letter-spacing: 3px;
       text-transform: uppercase;
@@ -111,7 +88,31 @@
       text-decoration: none;
     }
 
-    /* DROPDOWN */
+    /* SUB LINK (Blend The Vision) */
+    .sub {
+      position: fixed;
+      top: 70px;
+      left: 40px;
+      z-index: 3;
+      font-size: 12px;
+      letter-spacing: 3px;
+      opacity: 0.8;
+      text-transform: uppercase;
+    }
+
+    .sub a {
+      color: white;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+      padding-bottom: 3px;
+      transition: 0.3s;
+    }
+
+    .sub a:hover {
+      opacity: 0.5;
+    }
+
+    /* DROPDOWNS */
     .dropdown {
       display: none;
       flex-direction: column;
@@ -152,37 +153,37 @@
 
 <div class="overlay"></div>
 
-<!-- CONTENT -->
-<div class="content">
+<!-- TOP LEFT BRAND -->
+<div class="brand">
+  Earth’s Closet
+</div>
 
-  <h1>Earth's Closet</h1>
+<!-- SUB LINK -->
+<div class="sub">
+  <a href="blend.html">Blend The Vision</a>
+</div>
 
-  <div class="sub">
-    <a href="blend.html">Blend The Vision</a>
+<!-- TOP RIGHT NAV -->
+<div class="nav">
+
+  <div class="item" onclick="toggle('curation')">
+    Curation
+    <div class="dropdown" id="curation">
+      <a href="https://www.ebay.com/usr/earthscloset">eBay</a>
+      <a href="https://www.depop.com/earthsclosetdepop/">Depop</a>
+      <a href="https://www.mercari.com/u/earthscloset/">Mercari</a>
+      <a href="https://poshmark.com/closet/earths_closet">Poshmark</a>
+    </div>
   </div>
 
-  <div class="nav">
-
-    <div class="item" onclick="toggle('curation')">
-      Curation
-      <div class="dropdown" id="curation">
-        <a href="https://www.ebay.com/usr/earthscloset">eBay</a>
-        <a href="https://www.depop.com/earthsclosetdepop/">Depop</a>
-        <a href="https://www.mercari.com/u/earthscloset/">Mercari</a>
-        <a href="https://poshmark.com/closet/earths_closet">Poshmark</a>
-      </div>
+  <div class="item" onclick="toggle('outlets')">
+    Outlets
+    <div class="dropdown" id="outlets">
+      <a href="https://www.instagram.com/earths_closet_shop/">Instagram</a>
+      <a href="https://tiktok.com/@yourname">TikTok</a>
+      <a href="https://youtube.com/@yourname">YouTube</a>
+      <a href="https://facebook.com/yourname">Facebook</a>
     </div>
-
-    <div class="item" onclick="toggle('outlets')">
-      Outlets
-      <div class="dropdown" id="outlets">
-        <a href="https://www.instagram.com/earths_closet_shop/">Instagram</a>
-        <a href="https://tiktok.com/@yourname">TikTok</a>
-        <a href="https://youtube.com/@yourname">YouTube</a>
-        <a href="https://facebook.com/yourname">Facebook</a>
-      </div>
-    </div>
-
   </div>
 
 </div>

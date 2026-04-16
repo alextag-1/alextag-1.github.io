@@ -16,13 +16,13 @@
       overflow: hidden;
       background: black;
       color: white;
-      font-family: "Courier New", monospace;
+      font-family: Helvetica, Arial, sans-serif;
     }
 
     /* CUSTOM CURSOR */
     .cursor {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
       border: 1px solid white;
       border-radius: 50%;
       position: fixed;
@@ -31,10 +31,10 @@
       z-index: 9999;
     }
 
-    /* SLIDER */
+    /* LEFT MEDIA SLIDER */
     .slider {
       position: absolute;
-      width: 100%;
+      width: 75%;
       height: 100%;
       overflow: hidden;
     }
@@ -45,66 +45,50 @@
       height: 110%;
       object-fit: cover;
       opacity: 0;
-      transform: scale(1.1) rotate(0deg);
-      transition: opacity 3s ease, transform 6s ease;
-      filter: contrast(110%) brightness(90%);
+      transition: opacity 2.5s ease;
     }
 
     .active {
       opacity: 1;
-      transform: scale(1) rotate(0.5deg);
     }
 
-    /* GRAIN */
-    .grain {
-      position: absolute;
-      width: 200%;
-      height: 200%;
-      background: url('https://grainy-gradients.vercel.app/noise.svg');
-      opacity: 0.12;
-      animation: grainMove 1s steps(2) infinite;
-    }
-
-    @keyframes grainMove {
-      0% { transform: translate(0,0); }
-      50% { transform: translate(-5%, 5%); }
-      100% { transform: translate(5%, -5%); }
-    }
-
-    /* FLOATING MENU */
+    /* RIGHT MENU */
     .menu {
       position: absolute;
       right: 5%;
       top: 20%;
       display: flex;
       flex-direction: column;
-      gap: 40px;
+      gap: 45px;
       text-align: right;
     }
 
     h1 {
-      font-size: 24px;
-      letter-spacing: 4px;
-      margin-bottom: 40px;
+      font-size: 22px;
+      letter-spacing: 5px;
+      font-weight: 300;
+      text-transform: uppercase;
+      margin-bottom: 20px;
     }
 
     .nav-item {
       font-size: 14px;
-      transition: 0.3s;
       position: relative;
+      transition: 0.3s;
     }
 
-    .nav-item:hover {
-      transform: translateX(-10px) skewX(-10deg);
-      opacity: 0.6;
-    }
+    /* ❌ REMOVED ALL SHAKE / GLITCH HOVER */
 
     .nav-item a {
       color: white;
       text-decoration: none;
     }
 
-    /* DROPDOWN */
+    .nav-item:hover {
+      opacity: 0.6;
+    }
+
+    /* DROPDOWNS */
     .dropdown {
       max-height: 0;
       overflow: hidden;
@@ -112,8 +96,8 @@
       flex-direction: column;
       gap: 10px;
       margin-top: 10px;
-      transition: max-height 0.5s ease;
       font-size: 12px;
+      transition: max-height 0.4s ease;
     }
 
     .dropdown.open {
@@ -121,25 +105,23 @@
     }
 
     .dropdown a {
+      color: white;
       opacity: 0.5;
+      text-decoration: none;
     }
 
     .dropdown a:hover {
       opacity: 1;
     }
 
-    /* GLITCH TEXT */
-    .glitch:hover {
-      animation: glitch 0.3s infinite;
-    }
-
-    @keyframes glitch {
-      0% { transform: translate(0); }
-      20% { transform: translate(-2px, 2px); }
-      40% { transform: translate(2px, -2px); }
-      60% { transform: translate(-2px, -2px); }
-      80% { transform: translate(2px, 2px); }
-      100% { transform: translate(0); }
+    /* GRAIN */
+    .grain {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.12;
+      background-image: url('https://grainy-gradients.vercel.app/noise.svg');
     }
 
   </style>
@@ -149,7 +131,7 @@
 
 <div class="cursor"></div>
 
-<!-- SLIDER -->
+<!-- MEDIA -->
 <div class="slider">
 
   <img src="image1.jpg" class="slide active">
@@ -165,32 +147,32 @@
 
 </div>
 
-<!-- FLOATING MENU -->
+<!-- MENU -->
 <div class="menu">
 
-  <h1>𝙱𝚕𝚎𝚗𝚍 𝚃𝚑𝚎 𝚅𝚒𝚜𝚒𝚘𝚗</h1>
+  <h1>Blend The Vision</h1>
 
-  <div class="nav-item glitch">
-    <a href="blend.html">𝚋𝚕𝚎𝚗𝚍 𝚝𝚑𝚎 𝚟𝚒𝚜𝚒𝚘𝚗</a>
+  <div class="nav-item">
+    <a href="blend.html">Blend The Vision</a>
   </div>
 
-  <div class="nav-item glitch" onclick="toggleDropdown('curation')">
-    𝚌𝚞𝚛𝚊𝚝𝚒𝚘𝚗
+  <div class="nav-item" onclick="toggleDropdown('curation')">
+    Curation
     <div class="dropdown" id="curation">
-      <a href="https://www.ebay.com/usr/earthscloset">𝚎𝚋𝚊𝚢</a>
-      <a href="https://www.depop.com/earthsclosetdepop/">𝚍𝚎𝚙𝚘𝚙</a>
-      <a href="https://www.mercari.com/u/earthscloset/">𝚖𝚎𝚛𝚌𝚊𝚛𝚒</a>
-      <a href="https://poshmark.com/closet/earths_closet">𝚙𝚘𝚜𝚑𝚖𝚊𝚛𝚔</a>
+      <a href="https://www.ebay.com/usr/earthscloset">eBay</a>
+      <a href="https://www.depop.com/earthsclosetdepop/">Depop</a>
+      <a href="https://www.mercari.com/u/earthscloset/">Mercari</a>
+      <a href="https://poshmark.com/closet/earths_closet">Poshmark</a>
     </div>
   </div>
 
-  <div class="nav-item glitch" onclick="toggleDropdown('outlets')">
-    𝚘𝚞𝚝𝚕𝚎𝚝𝚜
+  <div class="nav-item" onclick="toggleDropdown('outlets')">
+    Outlets
     <div class="dropdown" id="outlets">
-      <a href="https://www.instagram.com/earths_closet_shop/">𝚒𝚗𝚜𝚝𝚊𝚐𝚛𝚊𝚖</a>
-      <a href="https://tiktok.com/@yourname">𝚝𝚒𝚔𝚝𝚘𝚔</a>
-      <a href="https://youtube.com/@yourname">𝚢𝚘𝚞𝚝𝚞𝚋𝚎</a>
-      <a href="https://facebook.com/yourname">𝚏𝚊𝚌𝚎𝚋𝚘𝚘𝚔</a>
+      <a href="https://www.instagram.com/earths_closet_shop/">Instagram</a>
+      <a href="https://tiktok.com/@yourname">TikTok</a>
+      <a href="https://youtube.com/@yourname">YouTube</a>
+      <a href="https://facebook.com/yourname">Facebook</a>
     </div>
   </div>
 
@@ -199,7 +181,8 @@
 <script>
   // CURSOR
   const cursor = document.querySelector(".cursor");
-  document.addEventListener("mousemove", e => {
+
+  document.addEventListener("mousemove", (e) => {
     cursor.style.left = e.clientX + "px";
     cursor.style.top = e.clientY + "px";
   });
@@ -214,7 +197,7 @@
     index = (index + 1) % slides.length;
   }
 
-  setInterval(showSlide, 6000);
+  setInterval(showSlide, 5000);
 
   // DROPDOWN
   function toggleDropdown(id) {

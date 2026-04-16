@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Blend The Vision</title>
+  <title>Earth's Closet</title>
 
   <style>
     * {
@@ -39,7 +39,7 @@
       opacity: 1;
     }
 
-    /* DARK OVERLAY FOR READABILITY */
+    /* DARK OVERLAY */
     .overlay {
       position: fixed;
       inset: 0;
@@ -57,16 +57,33 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      gap: 45px;
+      gap: 40px;
     }
 
-    /* BRAND TITLE */
     h1 {
-      font-size: 28px;
+      font-size: 30px;
       letter-spacing: 6px;
       font-weight: 300;
       text-transform: uppercase;
-      opacity: 0.95;
+    }
+
+    .sub {
+      font-size: 13px;
+      letter-spacing: 3px;
+      opacity: 0.8;
+      text-transform: uppercase;
+    }
+
+    .sub a {
+      color: white;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+      padding-bottom: 3px;
+      transition: 0.3s;
+    }
+
+    .sub a:hover {
+      opacity: 0.5;
     }
 
     /* NAV */
@@ -74,13 +91,14 @@
       display: flex;
       flex-direction: column;
       gap: 18px;
-      font-size: 14px;
+      margin-top: 20px;
+      font-size: 13px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
     }
 
     .item {
       cursor: pointer;
-      letter-spacing: 3px;
-      text-transform: uppercase;
       transition: 0.3s;
     }
 
@@ -99,7 +117,7 @@
       flex-direction: column;
       gap: 10px;
       margin-top: 10px;
-      font-size: 12px;
+      font-size: 11px;
       letter-spacing: 2px;
     }
 
@@ -137,13 +155,13 @@
 <!-- CONTENT -->
 <div class="content">
 
-  <h1>𝙱𝚕𝚎𝚗𝚍 𝚃𝚑𝚎 𝚅𝚒𝚜𝚒𝚘𝚗</h1>
+  <h1>Earth's Closet</h1>
+
+  <div class="sub">
+    <a href="blend.html">Blend The Vision</a>
+  </div>
 
   <div class="nav">
-
-    <div class="item">
-      <a href="blend.html">Blend The Vision</a>
-    </div>
 
     <div class="item" onclick="toggle('curation')">
       Curation
